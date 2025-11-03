@@ -19,10 +19,6 @@ function DashboardPage() {
   const [expenses, setExpenses] = useState([]);
   const [entries, setEntries] = useState([]);
 
-  // Pagination state for Low Inventory
-  const [lowPage, setLowPage] = useState(1);
-  const itemsPerPage = 15;
-
   useEffect(() => {
     const fetchUser = async () => {
       const { data: { session } } = await supabase.auth.getSession();
@@ -132,11 +128,7 @@ function DashboardPage() {
     .filter(p => (p.stock || 0) <= 5)
     .sort((a, b) => (a.stock || 0) - (b.stock || 0)); // Lowest stock first
 
-  const lowTotalPages = Math.ceil(lowInventory.length / itemsPerPage);
-  const displayedLowInventory = lowInventory.slice(
-    (lowPage - 1) * itemsPerPage,
-    lowPage * itemsPerPage
-  );
+  const displayedLowInventory = lowInventory;
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -190,29 +182,6 @@ function DashboardPage() {
                   </tbody>
                 </table>
               </div>
-
-              {/* Pagination */}
-              {lowTotalPages > 1 && (
-                <div className="flex justify-center items-center mt-4 gap-2">
-                  <button
-                    onClick={() => setLowPage(p => Math.max(p - 1, 1))}
-                    disabled={lowPage === 1}
-                    className="px-3 py-1 bg-gray-200 rounded disabled:opacity-50"
-                  >
-                    Prev
-                  </button>
-                  <span className="text-sm">
-                    Page {lowPage} of {lowTotalPages}
-                  </span>
-                  <button
-                    onClick={() => setLowPage(p => Math.min(p + 1, lowTotalPages))}
-                    disabled={lowPage === lowTotalPages}
-                    className="px-3 py-1 bg-gray-200 rounded disabled:opacity-50"
-                  >
-                    Next
-                  </button>
-                </div>
-              )}
             </>
           ) : (
             <p className="text-center text-gray-500 text-sm mt-4">All products have sufficient stock.</p>

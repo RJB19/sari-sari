@@ -1230,7 +1230,7 @@ setShowForm(!showForm);
 </th>
 
 
-          <th className="text-left p-2 relative w-48">Created At</th>
+          <th className="text-left p-2 relative w-48">Date Added</th>
           <th className="text-left p-2 relative w-48">Actions <> </>
                     <button
           onClick={() => {
