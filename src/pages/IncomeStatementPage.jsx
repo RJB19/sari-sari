@@ -61,13 +61,13 @@ const filteredSales = sales.filter((s) => {
   const saleDate = dayjs(s.created_at);
   return saleDate.isSameOrAfter(dayjs(startDate), 'day') &&
          saleDate.isSameOrBefore(dayjs(endDate), 'day');
-});
+}).sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
 
 const filteredExpenses = expenses.filter((e) => {
   const expenseDate = dayjs(e.created_at);
   return expenseDate.isSameOrAfter(dayjs(startDate), 'day') &&
          expenseDate.isSameOrBefore(dayjs(endDate), 'day');
-});
+}).sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
 
 
   const totalSales = filteredSales.reduce((sum, s) => sum + s.amount, 0);
@@ -131,11 +131,11 @@ const filteredExpenses = expenses.filter((e) => {
         {/* Summary Section */}
         <div className="bg-white shadow rounded p-6 mb-8 text-sm sm:text-base">
           <ul className="space-y-2">
-            <li>💰 <strong>Sales Revenue:</strong> ₱{totalSales.toFixed(2)}</li>
-            <li>📦 <strong>Cost of Goods Sold (COGS):</strong> ₱{cogs.toFixed(2)}</li>
-            <li>💸 <strong>Operating Expenses:</strong> ₱{totalExpenses.toFixed(2)}</li>
+            <li>💰 <strong>Sales Revenue:</strong> ₱{totalSales.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</li>
+            <li>📦 <strong>Cost of Goods Sold (COGS):</strong> ₱{cogs.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</li>
+            <li>💸 <strong>Operating Expenses:</strong> ₱{totalExpenses.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</li>
             <li className="font-bold text-lg sm:text-xl mt-2">
-              ✅ Net Profit: ₱{netProfit.toFixed(2)}
+              ✅ Net Profit: ₱{netProfit.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
             </li>
           </ul>
         </div>
@@ -162,7 +162,7 @@ const filteredExpenses = expenses.filter((e) => {
                         <td className="p-2 border">{dayjs(s.created_at).format('YYYY-MM-DD')}</td>
                         <td className="p-2 border">{product ? product.name : 'N/A'}</td>
                         <td className="p-2 border">{s.quantity}</td>
-                        <td className="p-2 border">₱{s.amount.toFixed(2)}</td>
+                        <td className="p-2 border">₱{s.amount.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</td>
                       </tr>
                     );
                   })}
@@ -215,7 +215,7 @@ const filteredExpenses = expenses.filter((e) => {
                     <tr key={i} className="text-center border-t">
                       <td className="p-2 border">{dayjs(e.created_at).format('YYYY-MM-DD')}</td>
                       <td className="p-2 border">{e.description}</td>
-                      <td className="p-2 border">₱{e.amount.toFixed(2)}</td>
+                      <td className="p-2 border">₱{e.amount.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</td>
                     </tr>
                   ))}
                 </tbody>

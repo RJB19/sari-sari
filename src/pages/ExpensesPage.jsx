@@ -57,6 +57,7 @@ const [itemsPerPage] = useState(15); // You can change to 5, 20, etc.
 const [savingExpenseId, setSavingExpenseId] = useState(null);
 
 const [recentlyUpdatedIds, setRecentlyUpdatedIds] = useState([]);
+const [isFilterOpen, setIsFilterOpen] = useState(false);
 
 
     useEffect(() => {
@@ -235,7 +236,7 @@ const monthlyTotalExpense = expenses
         Export Excel
       </button>
 <div className="mt-2 text-gray-800">
-  This Month: <strong>₱{monthlyTotalExpense.toFixed(2)}</strong>
+  This Month: <strong>₱{monthlyTotalExpense.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</strong>
 </div>
   </div>
 
@@ -381,7 +382,7 @@ const monthlyTotalExpense = expenses
       <p>No expenses recorded yet.</p>
     ) : (
 
-    <div className="overflow-x-auto ">
+    <div className={isFilterOpen ? 'overflow-visible' : 'overflow-x-auto'}>
 
         <table className="table-fixed w-full text-left text-sm min-w-[500px]">
           <thead className="bg-gray-100 text-gray-700">
@@ -396,6 +397,7 @@ const monthlyTotalExpense = expenses
         onClick={() => {
           setTempDescriptionFilter(descriptionFilter);
           setShowDescriptionFilter(!showDescriptionFilter);
+          setIsFilterOpen(!showDescriptionFilter);
         }}
         className="ml-2 text-gray-600"
       >
@@ -434,6 +436,7 @@ const monthlyTotalExpense = expenses
                 setTempDescriptionFilter([]);
                 setDescriptionFilter([]);
                 setShowDescriptionFilter(false);
+                setIsFilterOpen(false);
               }}
               className="text-xs text-gray-600 hover:underline"
             >
@@ -443,6 +446,7 @@ const monthlyTotalExpense = expenses
               onClick={() => {
                 setDescriptionFilter(tempDescriptionFilter);
                 setShowDescriptionFilter(false);
+                setIsFilterOpen(false);
               }}
               className="text-xs text-blue-600 hover:underline font-semibold"
             >
@@ -461,7 +465,10 @@ const monthlyTotalExpense = expenses
             <th className="py-2 px-3 relative w-32">
               Amount
               <button
-                onClick={() => setShowAmountFilter(!showAmountFilter)}
+                onClick={() => {
+                  setShowAmountFilter(!showAmountFilter);
+                  setIsFilterOpen(!showAmountFilter);
+                }}
                 className="ml-2 text-gray-600"
               >
                 {showAmountFilter ? '▲' : '▼'}
@@ -494,6 +501,7 @@ const monthlyTotalExpense = expenses
                         setTempAmountRange({ min: '', max: '' });
                         setAmountRange({ min: '', max: '' });
                         setShowAmountFilter(false);
+                        setIsFilterOpen(false);
                       }}
                       className="text-xs text-gray-600 hover:underline"
                     >
@@ -503,6 +511,7 @@ const monthlyTotalExpense = expenses
                       onClick={() => {
                         setAmountRange(tempAmountRange);
                         setShowAmountFilter(false);
+                        setIsFilterOpen(false);
                       }}
                       className="text-xs text-blue-600 hover:underline font-semibold"
                     >
@@ -517,7 +526,10 @@ const monthlyTotalExpense = expenses
             <th className="py-2 px-3 relative w-56">
               Date
               <button
-                onClick={() => setShowDateFilter(!showDateFilter)}
+                onClick={() => {
+                  setShowDateFilter(!showDateFilter);
+                  setIsFilterOpen(!showDateFilter);
+                }}
                 className="ml-2 text-gray-600"
               >
                 {showDateFilter ? '▲' : '▼'}
@@ -550,6 +562,7 @@ const monthlyTotalExpense = expenses
                       onClick={() => {
                         setDateRange({ from: '', to: '' });
                         setShowDateFilter(false);
+                        setIsFilterOpen(false);
                       }}
                       className="text-xs text-gray-600 hover:underline"
                     >
@@ -559,6 +572,7 @@ const monthlyTotalExpense = expenses
   onClick={() => {
     setDateRange(dateRangeInput);
     setShowDateFilter(false); //close the modal
+    setIsFilterOpen(false);
   }}
   className="text-xs text-blue-600 hover:underline font-semibold"
 >
@@ -625,7 +639,7 @@ const monthlyTotalExpense = expenses
                 <>
                  
                   <td className="py-2 px-3">{exp.description}</td>
-                  <td className="py-2 px-3">₱{exp.amount.toFixed(2)}</td>
+                  <td className="py-2 px-3">₱{exp.amount.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</td>
                   <td className="py-2 px-3">{dayjs(exp.created_at).format('LLL')}</td>
                   <td className="py-2 px-3 whitespace-nowrap text-sm font-medium">
                     <span

@@ -22,6 +22,7 @@ import * as XLSX from 'xlsx';
     const [isLoading, setIsLoading] = useState(false);
     const [isSavingSale, setIsSavingSale] = useState(false);
     const [isUpdatingSale, setIsUpdatingSale] = useState(false);
+const [isFilterOpen, setIsFilterOpen] = useState(false);
 
   const [productFilter, setProductFilter] = useState([]);
   const [dateRange, setDateRange] = useState({ from: '', to: '' });
@@ -382,7 +383,7 @@ const todaysTotalSales = sales
     Export Excel
   </button>
     <div className="mt-2 text-gray-800">
-    Today's Sales: <strong>₱{todaysTotalSales.toFixed(2)}</strong>
+    Today's Sales: <strong>₱{todaysTotalSales.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</strong>
   </div>
 </div>
 
@@ -419,7 +420,7 @@ const todaysTotalSales = sales
                 <option value="">Select product</option>
                 {products.map((p) => (
                   <option key={p.id} value={p.id}>
-                    {p.name} (₱{p.price}) - Stock: {p.stock}
+                    {p.name} (₱{p.price.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}) - Stock: {p.stock}
                   </option>
                 ))}
               </select>
@@ -517,7 +518,7 @@ const todaysTotalSales = sales
       
 
       
-      <div className="overflow-x-auto">
+      <div className={isFilterOpen ? 'overflow-visible' : 'overflow-x-auto'}>
         <table className="w-full text-left text-sm min-w-[600px]">
           <thead className="bg-gray-100 text-gray-700">
             <tr>
@@ -527,6 +528,7 @@ const todaysTotalSales = sales
   onClick={() => {
     setTempProductFilter(productFilter);
     setShowProductFilter(!showProductFilter);
+    setIsFilterOpen(!showProductFilter);
   }}
   className="ml-2 text-gray-600"
   aria-haspopup="true"
@@ -566,6 +568,7 @@ const todaysTotalSales = sales
     setTempProductFilter([]);
     setProductFilter([]);         // Reset actual product filter
     setShowProductFilter(false);  // Close dropdown
+    setIsFilterOpen(false);
   }}
   className="text-xs text-gray-600 hover:underline"
 >
@@ -576,6 +579,7 @@ const todaysTotalSales = sales
             onClick={() => {
               setProductFilter(tempProductFilter);
               setShowProductFilter(false);
+              setIsFilterOpen(false);
             }}
             className="text-xs text-blue-600 hover:underline font-semibold"
           >
@@ -594,6 +598,7 @@ const todaysTotalSales = sales
   onClick={() => {
     setTempDateRange(dateRange);
     setShowDateFilter(!showDateFilter);
+    setIsFilterOpen(!showDateFilter);
   }}
   className="ml-2 text-gray-600"
   aria-haspopup="true"
@@ -629,6 +634,7 @@ const todaysTotalSales = sales
     setTempDateRange({ from: '', to: '' });
     setDateRange({ from: '', to: '' });   // Reset actual date filter
     setShowDateFilter(false);            // Close dropdown
+    setIsFilterOpen(false);
   }}
   className="text-xs text-gray-600 hover:underline"
 >
@@ -639,6 +645,7 @@ const todaysTotalSales = sales
               onClick={() => {
                 setDateRange(tempDateRange);
                 setShowDateFilter(false);
+                setIsFilterOpen(false);
               }}
               className="text-xs text-blue-600 hover:underline font-semibold"
             >
@@ -685,7 +692,7 @@ const todaysTotalSales = sales
                         disabled={isUpdatingSale}
                       />
                     </td>
-                    <td className="py-2 px-3">₱{(editedQty * products.find(p => p.id === parseInt(editedProductId))?.price || 0).toFixed(2)}</td>
+                    <td className="py-2 px-3">₱{(editedQty * products.find(p => p.id === parseInt(editedProductId))?.price || 0).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</td>
                     <td className="py-2 px-3">{dayjs(sale.created_at).format('MMM D, YYYY h:mm A')
 }</td>
                     <td className="py-2 px-3 space-x-1">
@@ -715,7 +722,7 @@ const todaysTotalSales = sales
                   <>
                     <td className="py-2 px-3">{sale.products?.name || "N/A"}</td>
                     <td className="py-2 px-3">{sale.quantity}</td>
-                    <td className="py-2 px-3">₱{sale.amount.toFixed(2)}</td>
+                    <td className="py-2 px-3">₱{sale.amount.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</td>
                     <td className="py-2 px-3">{dayjs(sale.created_at).format('MMM D, YYYY h:mm A')
 }</td>
                     <td className="py-2 px-3 space-x-1">
