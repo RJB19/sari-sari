@@ -58,6 +58,8 @@ const [showNameDropdown, setShowNameDropdown] = useState(false);
 
 const [isSaving, setIsSaving] = useState(false);
 const [isEditingProduct, setIsEditingProduct] = useState(false);
+const [isFilterOpen, setIsFilterOpen] = useState(false);
+const [showArchived, setShowArchived] = useState(true);
 
 const [sortAscending, setSortAscending] = useState(true);
 
@@ -448,7 +450,7 @@ const handleSaveEdit = async () => {
   // 6) Check current available cash before updating
   const currentCash = computeCashBalance(); // uses current state (old product values)
   if (additionalCost > currentCash) {
-    alert(`Insufficient funds to increase stock.\nNeeded: ₱${additionalCost.toFixed(2)} | Available: ₱${currentCash.toFixed(2)}`);
+    alert(`Insufficient funds to increase stock.\nNeeded: ₱${additionalCost.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} | Available: ₱${currentCash.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`);
     setIsEditingProduct(false);
     return;
   }
@@ -709,7 +711,7 @@ const handleAddProductOnly = async (e) => {
   const currentCash = computeCashBalance();
 
   if (newTotalCost > currentCash) {
-    alert(`Insufficient funds. Available cash: ₱${currentCash.toFixed(2)}`);
+    alert(`Insufficient funds. Available cash: ₱${currentCash.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`);
     return;
   }
 
@@ -877,7 +879,7 @@ return (
 
       {/* Available Cash */}
       <p className="text-right mb-4 text-gray-700">
-        Available Cash: <strong>₱{computeCashBalance().toFixed(2)}</strong>
+        Available Cash: <strong>₱{computeCashBalance().toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</strong>
       </p>
 
       {/* Form */}
@@ -1012,14 +1014,17 @@ setShowForm(!showForm);
 
 
 
-      <div className="overflow-x-auto">
+      <div className={isFilterOpen ? 'overflow-visible' : 'overflow-x-auto'}>
       <table className="w-full text-left text-sm min-w-[600px]">
       <thead className="bg-gray-100 text-gray-700 ">
         <tr>
 <th className="text-left p-2 relative">
   Name
   <button
-    onClick={() => setNameFilterDropdown(!nameFilterDropdown)}
+    onClick={() => {
+      setNameFilterDropdown(!nameFilterDropdown);
+      setIsFilterOpen(!nameFilterDropdown);
+    }}
     className="ml-1 text-xs"
   >
     {nameFilterDropdown ? '▲' : '▼'}
@@ -1057,6 +1062,7 @@ setShowForm(!showForm);
             setNameFilter([]);
             setNameFilterDropdown(false);
             setCurrentPage(1);
+            setIsFilterOpen(false);
           }}
           className="text-xs text-gray-600 hover:underline"
         >
@@ -1067,6 +1073,7 @@ setShowForm(!showForm);
             setNameFilter(tempNameFilter);
             setNameFilterDropdown(false);
             setCurrentPage(1);
+            setIsFilterOpen(false);
           }}
           className="text-xs text-blue-600 hover:underline font-semibold"
         >
@@ -1081,7 +1088,10 @@ setShowForm(!showForm);
 
 <th className="text-left p-2 relative">
   Price
-  <button onClick={() => setShowPriceDropdown(!showPriceDropdown)} className="ml-1 text-xs">
+  <button onClick={() => {
+    setShowPriceDropdown(!showPriceDropdown);
+    setIsFilterOpen(!showPriceDropdown);
+  }} className="ml-1 text-xs">
     {showPriceDropdown ? '▲' : '▼'}
   </button>
   {showPriceDropdown && (
@@ -1107,6 +1117,7 @@ setShowForm(!showForm);
             setTempPriceRange({ min: '', max: '' });
             setShowPriceDropdown(false);
             setCurrentPage(1);
+            setIsFilterOpen(false);
           }}
           className="text-xs text-gray-600 hover:underline"
         >
@@ -1117,6 +1128,7 @@ setShowForm(!showForm);
             setPriceRange(tempPriceRange);
             setShowPriceDropdown(false);
             setCurrentPage(1);
+            setIsFilterOpen(false);
           }}
           className="text-xs text-blue-600 hover:underline font-semibold"
         >
@@ -1132,7 +1144,10 @@ setShowForm(!showForm);
 
 <th className="text-left p-2 relative">
   Cost
-  <button onClick={() => setShowCostDropdown(!showCostDropdown)} className="ml-1 text-xs">
+  <button onClick={() => {
+    setShowCostDropdown(!showCostDropdown);
+    setIsFilterOpen(!showCostDropdown);
+  }} className="ml-1 text-xs">
     {showCostDropdown ? '▲' : '▼'}
   </button>
   {showCostDropdown && (
@@ -1158,6 +1173,7 @@ setShowForm(!showForm);
             setTempCostRange({ min: '', max: '' });
             setShowCostDropdown(false);
             setCurrentPage(1);
+            setIsFilterOpen(false);
           }}
           className="text-xs text-gray-600 hover:underline"
         >
@@ -1168,6 +1184,7 @@ setShowForm(!showForm);
             setCostRange(tempCostRange);
             setShowCostDropdown(false);
             setCurrentPage(1);
+            setIsFilterOpen(false);
           }}
           className="text-xs text-blue-600 hover:underline font-semibold"
         >
@@ -1182,7 +1199,10 @@ setShowForm(!showForm);
 
 <th className="text-left p-2 relative">
   Stock
-  <button onClick={() => setShowStockDropdown(!showStockDropdown)} className="ml-1 text-xs">
+  <button onClick={() => {
+    setShowStockDropdown(!showStockDropdown);
+    setIsFilterOpen(!showStockDropdown);
+  }} className="ml-1 text-xs">
     {showStockDropdown ? '▲' : '▼'}
   </button>
   {showStockDropdown && (
@@ -1208,6 +1228,7 @@ setShowForm(!showForm);
             setTempStockRange({ min: '', max: '' });
             setShowStockDropdown(false);
             setCurrentPage(1);
+            setIsFilterOpen(false);
           }}
           className="text-xs text-gray-600 hover:underline"
         >
@@ -1218,6 +1239,7 @@ setShowForm(!showForm);
             setStockRange(tempStockRange);
             setShowStockDropdown(false);
             setCurrentPage(1);
+            setIsFilterOpen(false);
           }}
           className="text-xs text-blue-600 hover:underline font-semibold"
         >
@@ -1321,8 +1343,8 @@ setShowForm(!showForm);
           )}
         </td>
         
-                <td className="p-2">₱{Number(p.price).toFixed(2)}</td>
-                <td className="p-2">₱{Number(p.cost).toFixed(2)}</td>
+                <td className="p-2">₱{Number(p.price).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</td>
+                <td className="p-2">₱{Number(p.cost).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</td>
 
                   <td className={`p-2 ${p.stock < 6 ? 'text-red-600 font-semibold' : ''}`}>
     {p.stock}
@@ -1385,65 +1407,77 @@ setShowForm(!showForm);
   {/* Archived Products Table */}
       {archivedProducts.length > 0 && (
         <>
-          <h2 className="text-lg font-semibold mb-3 my-8">Archived Products</h2>
-          <div className="overflow-x-auto">
-          <table className="w-full text-left text-sm min-w-[600px]">
-            <thead className="bg-gray-100 text-gray-700">
-              <tr>
-                <th className="text-left p-2 my-8">Name</th>
-                <th className="text-left p-2">Actions</th>
-              </tr>
-            </thead>
-            <tbody>
-              {currentArchivedProducts.map((p) => (
-                <tr
-                  key={p.id}
-                  className="border-t hover:bg-gray-50 transition"
-                >
-                  <td className="p-2">{p.name}</td>
-                  <td className="p-2">
-                    <button
-                      onClick={() => handleReactivate(p.id)}
-                      className="text-green-500"
-                    >
-                      Reactivate
-                    </button>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
+          <div className="flex justify-between items-center mb-3 my-8">
+            <h2 className="text-lg font-semibold">Archived Products</h2>
+            <button 
+              onClick={() => setShowArchived(!showArchived)}
+              className="text-sm text-blue-600 hover:underline"
+            >
+              {showArchived ? 'Hide' : 'Show'}
+            </button>
           </div>
+          {showArchived && (
+            <>
+              <div className={isFilterOpen ? 'overflow-visible' : 'overflow-x-auto'}>
+              <table className="w-full text-left text-sm min-w-[600px]">
+                <thead className="bg-gray-100 text-gray-700">
+                  <tr>
+                    <th className="text-left p-2 my-8">Name</th>
+                    <th className="text-left p-2">Actions</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {currentArchivedProducts.map((p) => (
+                    <tr
+                      key={p.id}
+                      className="border-t hover:bg-gray-50 transition"
+                    >
+                      <td className="p-2">{p.name}</td>
+                      <td className="p-2">
+                        <button
+                          onClick={() => handleReactivate(p.id)}
+                          className="text-green-500"
+                        >
+                          Reactivate
+                        </button>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+              </div>
 
-          {/* Pagination Controls */}
-          {archivedProducts.length > itemsPerPageArchived && (
-            <div className="flex justify-center items-center mt-4 gap-2">
-              <button
-                onClick={() =>
-                  setArchivedCurrentPage((prev) => Math.max(prev - 1, 1))
-                }
-                disabled={archivedCurrentPage === 1}
-                className="px-3 py-1 bg-gray-200 rounded disabled:opacity-50"
-              >
-                ◀ Prev
-              </button>
+              {/* Pagination Controls */}
+              {archivedProducts.length > itemsPerPageArchived && (
+                <div className="flex justify-center items-center mt-4 gap-2">
+                  <button
+                    onClick={() =>
+                      setArchivedCurrentPage((prev) => Math.max(prev - 1, 1))
+                    }
+                    disabled={archivedCurrentPage === 1}
+                    className="px-3 py-1 bg-gray-200 rounded disabled:opacity-50"
+                  >
+                    ◀ Prev
+                  </button>
 
-              <span className="text-sm text-gray-700">
-                Page {archivedCurrentPage} of {totalPagesArchived}
-              </span>
+                  <span className="text-sm text-gray-700">
+                    Page {archivedCurrentPage} of {totalPagesArchived}
+                  </span>
 
-              <button
-                onClick={() =>
-                  setArchivedCurrentPage((prev) =>
-                    prev < totalPagesArchived ? prev + 1 : prev
-                  )
-                }
-                disabled={archivedCurrentPage === totalPagesArchived}
-                className="px-3 py-1 bg-gray-200 rounded disabled:opacity-50"
-              >
-                Next ▶
-              </button>
-            </div>
+                  <button
+                    onClick={() =>
+                      setArchivedCurrentPage((prev) =>
+                        prev < totalPagesArchived ? prev + 1 : prev
+                      )
+                    }
+                    disabled={archivedCurrentPage === totalPagesArchived}
+                    className="px-3 py-1 bg-gray-200 rounded disabled:opacity-50"
+                  >
+                    Next ▶
+                  </button>
+                </div>
+              )}
+            </>
           )}
         </>
       )}

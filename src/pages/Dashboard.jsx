@@ -125,7 +125,7 @@ function DashboardPage() {
 
   // ===== Low Inventory (with sorting and pagination) =====
   const lowInventory = [...products]
-    .filter(p => (p.stock || 0) <= 5)
+    .filter(p => (p.stock || 0) <= 5 && !p.archived)
     .sort((a, b) => (a.stock || 0) - (b.stock || 0)); // Lowest stock first
 
   const displayedLowInventory = lowInventory;
@@ -144,7 +144,7 @@ function DashboardPage() {
               <CartesianGrid strokeDasharray="3 3" />
               <XAxis dataKey="month" />
               <YAxis />
-              <Tooltip formatter={(v) => `₱${v.toFixed(2)}`} />
+              <Tooltip formatter={(v) => `₱${v.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`} />
               <Bar dataKey="profit" fill="#60a5fa" radius={[8, 8, 0, 0]} />
             </BarChart>
           </ResponsiveContainer>
@@ -211,7 +211,7 @@ const DataTable = ({ title, data, columns, labels, money = false }) => (
               <tr key={i} className="text-center border-t">
                 <td className="p-2 border">{item[columns[0]]}</td>
                 <td className="p-2 border">
-                  {money ? `₱${item[columns[1]].toFixed(2)}` : item[columns[1]]}
+                  {money ? `₱${item[columns[1]].toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}` : item[columns[1]]}
                 </td>
               </tr>
             ))}
